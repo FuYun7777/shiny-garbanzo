@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浮云 · 个人主页</title>
+  <meta name="description" content="浮云的个人主页 — 一个普通的DIY爱好者">
+  <meta property="og:title" content="浮云 · 个人主页">
+  <meta property="og:description" content="一个普通的DIY爱好者">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fuyun3.top">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      background: #0c0c0c;
+      transition: background 0.5s ease;
+    }
+
+    html.light {
+      background: #faf7f5;
+    }
+
+    :root {
+      --text: #e8e0d8;
+      --text-secondary: #b8a99a;
+      --accent: #c9a27c;
+      --line: #5c4e42;
+      --footer: #6b5f55;
+      --btn-border: #5c4e42;
+      --btn-text: #b8a99a;
+      --btn-bg-hover: rgba(201, 162, 124, 0.08);
+    }
+
+    body.light {
+      --text: #2c1810;
+      --text-secondary: #8b5a4a;
+      --accent: #c23a2b;
+      --line: #e0c8c0;
+      --footer: #b89088;
+      --btn-border: #d4a99a;
+      --btn-text: #8b5a4a;
+      --btn-bg-hover: rgba(194, 58, 43, 0.06);
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", "Noto Sans SC", "Source Han Sans SC", sans-serif;
+      color: var(--text);
+      overflow-x: hidden;
+      transition: color 0.4s ease, background 0.5s ease;
+      background: #0c0c0c;
+      color-scheme: dark;
+    }
+
+    body.light {
+      background: #faf7f5;
+      color-scheme: light;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    .top-controls {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      display: flex;
+      gap: 12px;
+      z-index: 100;
+    }
+
+    .control-btn {
+      position: relative;
+      background: transparent;
+      border: 1px solid var(--btn-border);
+      color: var(--btn-text);
+      padding: 7px 16px;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      border-radius: 2px;
+      overflow: hidden;
+      transition: color 0.35s ease, border-color 0.35s ease, transform 0.25s ease, box-shadow 0.35s ease;
+      font-family: inherit;
+    }
+
+    .control-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--btn-bg-hover);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 0;
+    }
+
+    .control-btn span {
+      position: relative;
+      z-index: 1;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .control-btn:hover {
+      color: var(--text);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .control-btn:hover::before {
+      transform: scaleX(1);
+    }
+
+    .control-btn:hover span {
+      transform: scale(1.05);
+    }
+
+    .control-btn:active {
+      transform: translateY(0) scale(0.96);
+    }
+
+    .control-btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .container {
+      text-align: center;
+      padding: 40px 24px;
+      max-width: 640px;
+    }
+
+    .name {
+      font-size: clamp(2.6rem, 7vw, 3.8rem);
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      margin-bottom: 14px;
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+      transition: letter-spacing 0.5s ease;
+    }
+
+    .name:hover {
+      letter-spacing: 0.28em;
+    }
+
+    .intro {
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      letter-spacing: 0.08em;
+      margin-bottom: 48px;
+      line-height: 1.8;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards;
+    }
+
+    .line {
+      width: 40px;
+      height: 1px;
+      background: var(--line);
+      margin: 0 auto 36px;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.6s forwards;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 32px 40px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.7s forwards;
+    }
+
+    .link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.35s ease;
+    }
+
+    .link svg {
+      width: 28px;
+      height: 28px;
+      fill: currentColor;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.35s ease;
+    }
+
+    .link span {
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      opacity: 0.85;
+      font-weight: 400;
+    }
+
+    .link:hover {
+      color: var(--text);
+    }
+
+    .link:hover svg {
+      transform: translateY(-4px);
+      color: var(--accent);
+    }
+
+    .link:hover span {
+      opacity: 1;
+    }
+
+    .link:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    .footer {
+      margin-top: 64px;
+      font-size: 0.75rem;
+      color: var(--footer);
+      letter-spacing: 0.18em;
+      opacity: 0;
+      animation: fadeUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 1s forwards;
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .links {
+        gap: 24px 28px;
+      }
+      .top-controls {
+        top: 16px;
+        right: 16px;
+      }
+      .control-btn {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-controls">
+    <button class="control-btn" id="themeBtn" aria-label="切换主题" aria-pressed="false">
+      <span>暗夜</span>
+    </button>
+    <button class="control-btn" id="langBtn" aria-label="切换语言">
+      <span>EN</span>
+    </button>
+  </div>
+
+  <div class="container">
+    <h1 class="name" data-zh="浮 云" data-en="Fuyun">浮 云</h1>
+    <div class="line" aria-hidden="true"></div>
+    <p class="intro" data-zh="一个普通的DIY爱好者" data-en="An ordinary DIY enthusiast">一个普通的DIY爱好者</p >
+    
+    <nav class="links" aria-label="常用链接">
+      <a href=" " class="link" title="邮箱">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <span data-zh="邮箱" data-en="Email">邮箱</span>
+      </a >
+
+      <a href="https://github.com/" class="link" target="_blank" rel="noopener noreferrer" title="GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        <span data-zh="GitHub" data-en="GitHub">GitHub</span>
+      </a >
+
+      <a href="#" class="link" target="_blank" rel="noopener noreferrer" title="常用链接">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+        <span data-zh="常用链接" data-en="Links">常用链接</span>
+      </a >
+
+      <a href="https://fnos.net/fuyun3" class="link" target="_blank" rel="noopener noreferrer" title="NAS">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4zM2 4v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2zm2 0h16v16H4V4z"/></svg>
+        <span data-zh="NAS" data-en="NAS">NAS</span>
+      </a >
+    </nav>
+
+    <footer class="footer">FUYUN3.TOP</footer>
+  </div>
+
+  <script>
+    (function () {
+      const themeBtn = document.getElementById('themeBtn');
+      const langBtn = document.getElementById('langBtn');
+      const themeSpan = themeBtn.querySelector('span');
+      const langSpan = langBtn.querySelector('span');
+
+      let isLight = false;
+
+      function applyTheme(light) {
+        isLight = light;
+        document.body.classList.toggle('light', light);
+        document.documentElement.classList.toggle('light', light);
+        themeSpan.textContent = light ? '白昼' : '暗夜';
+        themeBtn.setAttribute('aria-pressed', light ? 'true' : 'false');
+        themeBtn.setAttribute('aria-label', light ? '当前为白昼模式，点击切换到暗夜' : '当前为暗夜模式，点击切换到白昼');
+      }
+
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        applyTheme(savedTheme === 'light');
+      } else {
+        const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+        applyTheme(systemPrefersLight);
+      }
+
+      themeBtn.addEventListener('click', () => {
+        applyTheme(!isLight);
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      });
+
+      window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+          applyTheme(e.matches);
+        }
+      });
+
+      let isEnglish = false;
+
+      function applyLang(en) {
+        isEnglish = en;
+        langSpan.textContent = en ? '中文' : 'EN';
+        document.querySelectorAll('[data-zh]').forEach(el => {
+          el.textContent = en ? el.dataset.en : el.dataset.zh;
+        });
+        document.documentElement.lang = en ? 'en' : 'zh-CN';
+        document.title = en ? 'Fuyun · Personal Page' : '浮云 · 个人主页';
+        langBtn.setAttribute('aria-label', en ? 'Switch to Chinese' : 'Switch to English');
+      }
+
+      const savedLang = localStorage.getItem('lang');
+      if (savedLang === 'en') {
+        applyLang(true);
+      }
+
+      langBtn.addEventListener('click', () => {
+        applyLang(!isEnglish);
+        localStorage.setItem('lang', isEnglish ? 'en' : 'zh');
+      });
+    })();
+  </script>
+</body>
+</html> 
